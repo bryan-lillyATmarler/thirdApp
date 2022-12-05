@@ -1,19 +1,23 @@
 import { useContext, useState } from "react";
-import { DatePicker, mergeStyleSets, defaultDatePickerStrings } from "@fluentui/react";
+import { DatePicker, mergeStyleSets, defaultDatePickerStrings, initializeIcons, Image } from "@fluentui/react";
 import { useData } from "@microsoft/teamsfx-react";
 import { TeamsFxContext } from "../Context";
 import { useEffect } from "react";
-
+import Dashboard from "../Admin/Dashboard";
+// import { initializeIcons } from '@fluentui/react';
 
 export function Welcome(props) {
+
+  initializeIcons();
   
   const styles = mergeStyleSets({
-    root: { selectors: { '> *': { marginBottom: 15 } } },
-    control: { width: '100%', height: 40 },
+    root: { selectors: { '> *': { marginBottom: 15, } } },
+    control: { width: '100%', height: '510px', borderRadius: '25px' },
   });
 
   useEffect(() => {
     fetchUserData();
+    //eslint-disable-next-line
   }, []);
 
   const { teamsfx } = useContext(TeamsFxContext);
@@ -101,8 +105,14 @@ export function Welcome(props) {
 
   return (
     <>
-      <div className="border border-black pl-10">
-        <h1>{userName ? userName : "Can't find your username"}</h1>
+      <div className="">
+        <Image className="mx-auto" src='/marlerTrans.png' alt="Marler Integrity" width={350} />
+        {/* <h1 className="">{userName ? userName : "Can't find your username"}</h1> */}
+      </div>
+      {userName !== 'Bryan illy' &&
+      <>
+      <div className="text-center">
+        <h1>Enter Your Daily Sub</h1>
       </div>
       <form className="m-10">
         <div className="grid grid-cols-4">
@@ -181,7 +191,10 @@ export function Welcome(props) {
         </div>
       </form>
 
-      <div className="px-5">
+      <div className="px-5 mb-10">
+        <div className="mb-5">
+          <h3 className="text-2xl">Your Current Logged Subs</h3>
+        </div>
         <table className="table-fixed w-full bg-white border border-slate-400">
           <thead>
             <tr>
@@ -207,6 +220,25 @@ export function Welcome(props) {
           </tbody>
         </table>
       </div>
+    </>
+}
+
+      {/* ADMIN STUFF */}
+
+
+      {userName === 'Bryan illy' &&
+      <>
+
+        <div>
+          <h1 className="text-2xl text-center">Sub Administration Dashboard</h1>
+        </div>
+
+        <Dashboard />
+
+      </>
+            
+      }
+
     </>
   );
 }
