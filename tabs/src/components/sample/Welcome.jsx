@@ -7,19 +7,6 @@ import Dashboard from "../Admin/Dashboard";
 // import { initializeIcons } from '@fluentui/react';
 
 export function Welcome(props) {
-
-  initializeIcons();
-  
-  const styles = mergeStyleSets({
-    root: { selectors: { '> *': { marginBottom: 15, } } },
-    control: { width: '100%', height: '510px', borderRadius: '25px' },
-  });
-
-  useEffect(() => {
-    fetchUserData();
-    //eslint-disable-next-line
-  }, []);
-
   const { teamsfx } = useContext(TeamsFxContext);
   const { loading, data, error } = useData(async () => {
     if (teamsfx) {
@@ -28,6 +15,21 @@ export function Welcome(props) {
     }
   });
   const userName = (loading || error) ? "": data.displayName;
+
+
+  initializeIcons();
+  
+  const styles = mergeStyleSets({
+    root: { selectors: { '> *': { marginBottom: 15, } } },
+    control: { width: '100%' },
+  });
+
+  useEffect(() => {
+    fetchUserData();
+    //eslint-disable-next-line
+  }, [loading]);
+
+
 
   //data from DB
   const [subData, setSubData] = useState([])
@@ -67,6 +69,9 @@ export function Welcome(props) {
 
   //handle submit 
   const handleSubmit = () => {
+
+    console.log(userName);
+
     let submitData = {
       date: subDate,
       subType: subType,
@@ -95,21 +100,24 @@ export function Welcome(props) {
 
   //fetch users sub documents
   const fetchUserData = () => {
+    //!!sometimes username is not registered right away
+    // console.log(loading)
     fetch(`${url}?user=${userName}`, {
       method: 'GET',
     }).then((res) => res.json())
-    .then((data) => {
-      setSubData(data.data);
-    });
+      .then((data) => {
+        setSubData(data.data);
+      });
+
   }
 
   return (
     <>
       <div className="">
         <Image className="mx-auto" src='/marlerTrans.png' alt="Marler Integrity" width={350} />
-        {/* <h1 className="">{userName ? userName : "Can't find your username"}</h1> */}
+        <h1 className="text-center">{userName ? userName : "Can't find your username"}</h1>
       </div>
-      {userName !== 'Bryan illy' &&
+      {userName !== 'ryan Lilly' &&
       <>
       <div className="text-center">
         <h1>Enter Your Daily Sub</h1>
@@ -121,12 +129,14 @@ export function Welcome(props) {
               Enter Date:
             </label>
             <DatePicker
+              isRequired
               className={styles.control}
               allowTextInput
               onSelectDate={handleDateChange}
               placeholder="Select Date"
               id='date'
               strings={defaultDatePickerStrings}
+              
             />
           </div>
           <div className="col-span-1 px-2">
@@ -166,6 +176,7 @@ export function Welcome(props) {
             </label>
             <input 
               type="text" 
+              required
               name="hotel" 
               id="hotel" 
               value={subHotel}
@@ -178,6 +189,7 @@ export function Welcome(props) {
             </label>
             <input 
               type="text" 
+              required
               name="town" 
               id="town" 
               value={subTown} 
@@ -226,7 +238,7 @@ export function Welcome(props) {
       {/* ADMIN STUFF */}
 
 
-      {userName === 'Bryan illy' &&
+      {userName === 'ryan Lilly' &&
       <>
 
         <div>
